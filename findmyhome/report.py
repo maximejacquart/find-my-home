@@ -3,11 +3,20 @@ from __future__ import annotations
 
 from datetime import date
 
-from jinja2 import Template
+from jinja2 import Environment
 
 from .models import Listing
 
-TEMPLATE = Template("""\
+
+def _safe_url(url: str) -> str:
+    """Only allow http(s) URLs in href/src; neutralize javascript: and other schemes."""
+    return url if isinstance(url, str) and url.startswith(("http://", "https://")) else "#"
+
+
+_env = Environment(autoescape=True)
+_env.filters["safe_url"] = _safe_url
+
+TEMPLATE = _env.from_string("""\
 <!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="utf-8"></head>
@@ -27,12 +36,12 @@ TEMPLATE = Template("""\
   {% for item in listings %}
   <div style="background:#fff;border:1px solid #ddd;border-radius:6px;margin-bottom:18px;overflow:hidden;">
     {% if item.listing.photos %}
-    <img src="{{ item.listing.photos[0] }}" alt="" style="width:100%;max-height:260px;object-fit:cover;display:block;">
+    <img src="{{ item.listing.photos[0]|safe_url }}" alt="" style="width:100%;max-height:260px;object-fit:cover;display:block;">
     {% endif %}
     <div style="padding:14px 18px;">
       <table width="100%" cellpadding="0" cellspacing="0"><tr>
         <td style="font-size:18px;font-weight:bold;">
-          <a href="{{ item.listing.url }}" style="color:#2b2b2b;text-decoration:none;">{{ item.listing.title }}</a>
+          <a href="{{ item.listing.url|safe_url }}" style="color:#2b2b2b;text-decoration:none;">{{ item.listing.title }}</a>
         </td>
         <td align="right" style="white-space:nowrap;">
           <span style="display:inline-block;background:{{ item.color }};color:#fff;border-radius:12px;padding:3px 10px;font-size:13px;font-family:Arial,sans-serif;font-weight:bold;">{{ item.score }}/100</span>
@@ -49,7 +58,7 @@ TEMPLATE = Template("""\
       <div style="font-size:12px;color:#a05a00;margin:6px 0;">⚠ À vérifier : {{ item.flags|join(' · ') }}</div>
       {% endif %}
       <div style="margin-top:10px;font-size:13px;font-family:Arial,sans-serif;">
-        <a href="{{ item.listing.url }}" style="color:#8a6d3b;">Voir l'annonce ({{ item.listing.source }})</a>
+        <a href="{{ item.listing.url|safe_url }}" style="color:#8a6d3b;">Voir l'annonce ({{ item.listing.source }})</a>
         <span style="color:#bbb;"> | </span>
         <span style="color:#999;">Sauvegarder : <code style="background:#f0ede6;padding:1px 5px;border-radius:3px;">fmh save {{ item.short_id }}</code></span>
       </div>
