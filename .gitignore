@@ -5,6 +5,9 @@ __pycache__/
 out/
 .firecrawl/
 
+# Runtime SQLite database (contains scraped listings + personal usage data)
+data/
+
 # Local config (personal). Keep the *.example.yaml templates tracked.
 config/config.yaml
 config/users/*.yaml
