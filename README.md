@@ -40,10 +40,55 @@ GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
 GMAIL_OAUTH_CLIENT_ID=...
 GMAIL_OAUTH_CLIENT_SECRET=...
 GMAIL_OAUTH_REFRESH_TOKEN=...
-AI_API_KEY=...
 ```
 
-Le scoring fonctionne avec n'importe quelle clé API de modèle IA (Anthropic, OpenAI, etc.) ou n'importe quel outil agentique CLI (Claude Code, Cursor, Codex…). Modifie `findmyhome/scoring.py` selon ton setup.
+**3. Choisis un backend LLM pour le scoring** — plusieurs options 100 % gratuites, aucune carte bancaire requise.
+
+#### Option A — Mistral (recommandé, ~2 min)
+
+Crée un compte sur [console.mistral.ai](https://console.mistral.ai), choisis le plan gratuit « Experiment », génère une clé, et ajoute dans ton `.env` :
+
+```
+FMH_LLM_BASE_URL=https://api.mistral.ai/v1
+FMH_LLM_API_KEY=ta-clé-mistral
+FMH_LLM_MODEL=mistral-small-latest
+```
+
+Gratuit, sans carte bancaire, excellent en français, et ça marche partout (y compris en Europe — voir l'avertissement Gemini plus bas).
+
+#### Option B — Groq (gratuit aussi)
+
+Clé gratuite sur [console.groq.com/keys](https://console.groq.com/keys) :
+
+```
+FMH_LLM_BASE_URL=https://api.groq.com/openai/v1
+FMH_LLM_API_KEY=ta-clé-groq
+FMH_LLM_MODEL=llama-3.3-70b-versatile
+```
+
+#### Option C — Ollama (100 % local, zéro clé, zéro cloud)
+
+Installe [Ollama](https://ollama.com), puis :
+
+```bash
+ollama pull llama3.1:8b
+```
+
+```
+FMH_LLM_BASE_URL=http://localhost:11434/v1
+FMH_LLM_MODEL=llama3.1:8b
+```
+
+Marche aussi avec LM Studio, OpenRouter, Google Gemini… tout endpoint compatible OpenAI (`/chat/completions`).
+
+> ⚠️ **Gemini** : le tier gratuit de l'API Gemini n'est pas disponible en France/UE (erreur « quota atteint » dès le premier appel, même avec une clé neuve). Hors UE, ça marche : `FMH_LLM_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai`, `FMH_LLM_MODEL=gemini-2.5-flash`.
+
+#### Option D — Claude
+
+- **Claude Code déjà installé** (abonnement Pro/Max) → rien à configurer, le CLI `claude` est détecté automatiquement.
+- **Sinon** → renseigne `ANTHROPIC_API_KEY` dans le `.env`, facturé à l'usage (quelques centimes par rapport).
+
+Ordre de priorité si plusieurs backends configurés : `FMH_LLM_BASE_URL` > `ANTHROPIC_API_KEY` > CLI `claude`.
 
 > **Besoin d'aide pour l'installation ?**
 > Copiez le texte ci-dessous et collez-le dans votre assistant IA (Claude, ChatGPT…) avec le fichier [SETUP.md](SETUP.md) en pièce jointe — il vous guidera pas à pas.
@@ -80,14 +125,14 @@ python -m findmyhome apply <id> --user prenom
 
 ```
 Bien'ici API ──▶ Filtres durs ──▶ Scoring LLM ──▶ Rapport HTML ──▶ Email
- (scraping)      (prix, surface,   (Claude, lit    (top N annonces   (Gmail)
-                  pièces, ville)    la description   avec verdict)
+ (scraping)      (prix, surface,   (LLM, lit la     (top N annonces   (Gmail)
+                  pièces, ville)    description      avec verdict)
                                     vs tes critères)
 ```
 
 1. **Collecte** — interroge l'API publique JSON de Bien'ici (pas de clé requise), normalise chaque annonce, stocke en SQLite pour ne rien scraper deux fois.
 2. **Filtres durs** — élimine sur des critères objectifs (budget, surface, meublé/non meublé, villes) avant de payer le moindre appel LLM.
-3. **Scoring** — chaque annonce restante passe devant un LLM (Claude) avec tes préférences en texte libre ("proche tram, lumineux, évite rdc..."). Renvoie un score 0-100, un verdict en une phrase, et les critères invérifiables depuis l'annonce.
+3. **Scoring** — chaque annonce restante passe devant un LLM (Gemini, Ollama, Claude… au choix) avec tes préférences en texte libre ("proche tram, lumineux, évite rdc..."). Renvoie un score 0-100, un verdict en une phrase, et les critères invérifiables depuis l'annonce.
 4. **Rapport** — génère une page HTML avec le top N annonces triées par score, et l'envoie par email via Gmail.
 5. **Suivi** — une annonce déjà envoyée n'est plus reproposée. Tu peux aussi sauvegarder une annonce (`fmh save`) ou générer un brouillon de mail de candidature personnalisé (`fmh apply`), qui relit l'annonce pour éviter un mail générique.
 
@@ -96,5 +141,5 @@ Bien'ici API ──▶ Filtres durs ──▶ Scoring LLM ──▶ Rapport HTML
 - Python, argparse (CLI)
 - SQLite (persistance, pas de serveur DB)
 - Requêtes HTTP directes vers l'API Bien'ici
-- LLM (Claude, ou n'importe quel modèle — voir `scoring.py`) pour le scoring et la génération des mails
+- LLM (tout endpoint compatible OpenAI : Gemini, Groq, Ollama… ou Claude) pour le scoring et la génération des mails
 - SMTP Gmail pour l'envoi

@@ -1,6 +1,8 @@
 """LLM scoring: reads each listing against the user's free-text preferences.
 
-Backend order: ANTHROPIC_API_KEY (direct API) > `claude` CLI (subscription).
+Backend order: FMH_LLM_BASE_URL (any OpenAI-compatible endpoint: Ollama, Groq,
+Gemini, OpenRouter, LM Studio...) > ANTHROPIC_API_KEY (direct API) > `claude`
+CLI (subscription).
 """
 from __future__ import annotations
 
@@ -68,12 +70,42 @@ def score_listings(listings: list[Listing], preferences: str) -> dict[str, dict]
 
 
 def _complete(prompt: str) -> str:
+    base_url = os.environ.get("FMH_LLM_BASE_URL")
+    if base_url:
+        return _complete_openai_compat(prompt, base_url)
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if api_key:
         return _complete_api(prompt, api_key)
     if shutil.which("claude"):
         return _complete_cli(prompt)
-    raise RuntimeError("Aucun backend LLM: définir ANTHROPIC_API_KEY ou installer le CLI claude")
+    raise RuntimeError(
+        "Aucun backend LLM: définir FMH_LLM_BASE_URL (Ollama, Groq, Gemini...), "
+        "ANTHROPIC_API_KEY, ou installer le CLI claude"
+    )
+
+
+def _complete_openai_compat(prompt: str, base_url: str) -> str:
+    """Any OpenAI-compatible /chat/completions endpoint (Ollama, Groq, Gemini,
+    OpenRouter, LM Studio, Mistral...). API key optional for local servers."""
+    model = os.environ.get("FMH_LLM_MODEL")
+    if not model:
+        raise RuntimeError("FMH_LLM_BASE_URL défini mais FMH_LLM_MODEL manquant")
+    headers = {"content-type": "application/json"}
+    api_key = os.environ.get("FMH_LLM_API_KEY")
+    if api_key:
+        headers["authorization"] = f"Bearer {api_key}"
+    resp = requests.post(
+        base_url.rstrip("/") + "/chat/completions",
+        headers=headers,
+        json={
+            "model": model,
+            "max_tokens": 4000,
+            "messages": [{"role": "user", "content": prompt}],
+        },
+        timeout=300,
+    )
+    resp.raise_for_status()
+    return resp.json()["choices"][0]["message"]["content"]
 
 
 def _complete_api(prompt: str, api_key: str) -> str:
