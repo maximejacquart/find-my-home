@@ -52,12 +52,16 @@ def _slug(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-") or "ville"
 
 
+FILTER_TYPE = {"location": "rent", "achat": "buy"}
+
+
 def _build_filters(filters: dict, size: int, offset: int, page: int) -> dict:
+    mode = filters.get("mode", "location")
     f: dict = {
         "size": size,
         "from": offset,
         "page": page,
-        "filterType": "rent",
+        "filterType": FILTER_TYPE.get(mode, "rent"),
         "onTheMarket": [True],
         "sortBy": "publicationDate",
         "sortOrder": "desc",
@@ -81,7 +85,8 @@ def _to_listing(ad: dict) -> Listing:
     rooms = ad.get("roomsQuantity")
     ptype = "maison" if ad.get("propertyType") == "house" else "appartement"
     room_slug = f"{rooms}pieces" if rooms and rooms > 1 else "1piece"
-    url = f"https://www.bienici.com/annonce/location/{_slug(city)}/{ptype}/{room_slug}/{ad['id']}"
+    ad_type = "vente" if ad.get("adType") == "buy" else "location"
+    url = f"https://www.bienici.com/annonce/{ad_type}/{_slug(city)}/{ptype}/{room_slug}/{ad['id']}"
     photos = [p.get("url_photo") or p.get("url", "") for p in ad.get("photos", [])]
     return Listing(
         id=f"bienici:{ad['id']}",
