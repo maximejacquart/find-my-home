@@ -40,13 +40,17 @@ GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
 GMAIL_OAUTH_CLIENT_ID=...
 GMAIL_OAUTH_CLIENT_SECRET=...
 GMAIL_OAUTH_REFRESH_TOKEN=...
-ANTHROPIC_API_KEY=...
+AI_API_KEY=...
 ```
+
+Le scoring fonctionne avec n'importe quelle clé API de modèle IA (Anthropic, OpenAI, etc.) ou n'importe quel outil agentique CLI (Claude Code, Cursor, Codex…). Modifie `findmyhome/scoring.py` selon ton setup.
 
 > **Besoin d'aide pour l'installation ?**
 > Copiez le texte ci-dessous et collez-le dans votre assistant IA (Claude, ChatGPT…) avec le fichier [SETUP.md](SETUP.md) en pièce jointe — il vous guidera pas à pas.
 >
-> *"Je veux configurer le projet Find My Home pour envoyer des rapports d'annonces immobilières par email. Lis le fichier SETUP.md joint et guide-moi étape par étape pour : créer mon fichier de profil, configurer les variables d'environnement Gmail OAuth, et lancer mon premier rapport."*
+> ```
+> Je veux configurer le projet Find My Home pour envoyer des rapports d'annonces immobilières par email. Lis le fichier SETUP.md joint et guide-moi étape par étape pour : créer mon fichier de profil, configurer les variables d'environnement Gmail OAuth, et lancer mon premier rapport.
+> ```
 
 ### Utilisation
 
