@@ -1,6 +1,6 @@
 # Find My Home 🏠
 
-Outil de veille locative automatisée. Collecte les annonces de Bien'ici via leur API, les score selon tes critères grâce à l'IA, et envoie un rapport hebdomadaire par email — sans jamais renvoyer une annonce déjà vue.
+Outil de veille locative automatisée. Scrape les annonces immobilières (Bien'ici), les filtre sur des critères objectifs, les score via LLM selon des préférences en texte libre, puis envoie un rapport par email — sans jamais reproposer une annonce déjà vue.
 
 ---
 
@@ -73,3 +73,28 @@ python -m findmyhome saved --user prenom
 ```bash
 python -m findmyhome apply <id> --user prenom
 ```
+
+---
+
+## Comment ça marche
+
+```
+Bien'ici API ──▶ Filtres durs ──▶ Scoring LLM ──▶ Rapport HTML ──▶ Email
+ (scraping)      (prix, surface,   (Claude, lit    (top N annonces   (Gmail)
+                  pièces, ville)    la description   avec verdict)
+                                    vs tes critères)
+```
+
+1. **Collecte** — interroge l'API publique JSON de Bien'ici (pas de clé requise), normalise chaque annonce, stocke en SQLite pour ne rien scraper deux fois.
+2. **Filtres durs** — élimine sur des critères objectifs (budget, surface, meublé/non meublé, villes) avant de payer le moindre appel LLM.
+3. **Scoring** — chaque annonce restante passe devant un LLM (Claude) avec tes préférences en texte libre ("proche tram, lumineux, évite rdc..."). Renvoie un score 0-100, un verdict en une phrase, et les critères invérifiables depuis l'annonce.
+4. **Rapport** — génère une page HTML avec le top N annonces triées par score, et l'envoie par email via Gmail.
+5. **Suivi** — une annonce déjà envoyée n'est plus reproposée. Tu peux aussi sauvegarder une annonce (`fmh save`) ou générer un brouillon de mail de candidature personnalisé (`fmh apply`), qui relit l'annonce pour éviter un mail générique.
+
+## Stack
+
+- Python, argparse (CLI)
+- SQLite (persistance, pas de serveur DB)
+- Requêtes HTTP directes vers l'API Bien'ici
+- LLM (Claude, ou n'importe quel modèle — voir `scoring.py`) pour le scoring et la génération des mails
+- SMTP Gmail pour l'envoi
