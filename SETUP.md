@@ -45,11 +45,40 @@ https://accounts.google.com/o/oauth2/auth?client_id=CLIENT_ID&redirect_uri=http:
 
 ### Scoring IA
 
+Plusieurs backends possibles, dont des gratuits sans carte bancaire. Un seul suffit.
+
+**Mistral (gratuit, recommandé)** — clé sur [console.mistral.ai](https://console.mistral.ai) (plan « Experiment ») :
+
+```
+FMH_LLM_BASE_URL=https://api.mistral.ai/v1
+FMH_LLM_API_KEY=...
+FMH_LLM_MODEL=mistral-small-latest
+```
+
+**Groq (gratuit)** — clé sur [console.groq.com/keys](https://console.groq.com/keys) :
+
+```
+FMH_LLM_BASE_URL=https://api.groq.com/openai/v1
+FMH_LLM_API_KEY=...
+FMH_LLM_MODEL=llama-3.3-70b-versatile
+```
+
+**Ollama (local, sans clé)** — après `ollama pull <modèle>` :
+
+```
+FMH_LLM_BASE_URL=http://localhost:11434/v1
+FMH_LLM_MODEL=<modèle>
+```
+
+Tout autre endpoint compatible OpenAI (`/chat/completions`) fonctionne de la même façon.
+
+**Claude** — soit le CLI `claude` est installé (abonnement, détecté automatiquement, rien à configurer), soit une clé API facturée à l'usage :
+
 ```
 ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-Crée une clé sur [console.anthropic.com](https://console.anthropic.com). Sans cette clé, le scoring utilise l'application Claude si elle est installée.
+Clé sur [console.anthropic.com](https://console.anthropic.com). Ordre de priorité : `FMH_LLM_BASE_URL` > `ANTHROPIC_API_KEY` > CLI `claude`.
 
 ---
 
