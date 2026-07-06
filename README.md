@@ -33,7 +33,7 @@ ANTHROPIC_API_KEY=...
 
 Pour `GMAIL_APP_PASSWORD` : [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords) (nécessite la validation en 2 étapes).
 
-Pour les variables `GMAIL_OAUTH_*` : crée un projet sur [console.cloud.google.com](https://console.cloud.google.com), active l'API Gmail, crée des identifiants OAuth "Application de bureau", puis lance le flow d'autorisation pour obtenir le refresh token.
+Pour les variables `GMAIL_OAUTH_*` : suis le guide [SETUP.md](SETUP.md) ou donne ce fichier à Claude pour qu'il te guide pas à pas.
 
 Pour `ANTHROPIC_API_KEY` : [console.anthropic.com](https://console.anthropic.com).
 
