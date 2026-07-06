@@ -1,6 +1,6 @@
 # Find My Home 🏠
 
-Veille locative automatisée sur Bordeaux. Collecte les annonces de Bien'ici, les score selon tes critères grâce à l'IA, et envoie un rapport hebdomadaire par email — sans jamais renvoyer une annonce déjà vue.
+Outil de veille locative automatisée. Collecte les annonces de Bien'ici via leur API, les score selon tes critères grâce à l'IA, et envoie un rapport hebdomadaire par email — sans jamais renvoyer une annonce déjà vue.
 
 ---
 
