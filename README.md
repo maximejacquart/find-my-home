@@ -6,7 +6,7 @@ Outil de veille locative automatisée. Collecte les annonces de Bien'ici via leu
 
 ## Tu veux juste recevoir les annonces ?
 
-La façon la plus simple : remplis ce formulaire → [tally.so/r/9q5lpp](https://tally.so/r/9q5lpp)
+La façon la plus simple : remplis ce formulaire → [tally.so/r/J9Y0GJ](https://tally.so/r/J9Y0GJ)
 
 Indique ton email, ton budget, ta surface, tes critères éliminatoires et ce qui compte pour toi — je m'occupe du reste. Tu recevras ton rapport chaque semaine sans rien installer.
 
