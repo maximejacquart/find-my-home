@@ -43,7 +43,10 @@ GMAIL_OAUTH_REFRESH_TOKEN=...
 ANTHROPIC_API_KEY=...
 ```
 
-> La config Gmail OAuth est un peu technique. Colle le fichier [SETUP.md](SETUP.md) dans ChatGPT, Claude ou n'importe quel assistant IA — il te guidera pas à pas.
+> **Besoin d'aide pour l'installation ?**
+> Copiez le texte ci-dessous et collez-le dans votre assistant IA (Claude, ChatGPT…) avec le fichier [SETUP.md](SETUP.md) en pièce jointe — il vous guidera pas à pas.
+>
+> *"Je veux configurer le projet Find My Home pour envoyer des rapports d'annonces immobilières par email. Lis le fichier SETUP.md joint et guide-moi étape par étape pour : créer mon fichier de profil, configurer les variables d'environnement Gmail OAuth, et lancer mon premier rapport."*
 
 ### Utilisation
 
