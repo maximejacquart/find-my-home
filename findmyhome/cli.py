@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -127,8 +128,12 @@ def cmd_apply(args):
     subject, body = apply_mail.generate(listing, user)
     out_dir = Path(config.ROOT) / "out"
     out_dir.mkdir(exist_ok=True)
-    safe_id = listing.id.replace(":", "_")
+    # listing.id comes from scraped third-party data; whitelist chars to keep
+    # the filename inside out/ (no path separators, no ..).
+    safe_id = re.sub(r"[^A-Za-z0-9_.-]", "_", listing.id)
     out_file = out_dir / f"candidature-{safe_id}.txt"
+    if out_file.resolve().parent != out_dir.resolve():
+        sys.exit("Nom de fichier de sortie invalide.")
     out_file.write_text(f"OBJET: {subject}\n\n{body}\n", encoding="utf-8")
     print(f"\nOBJET: {subject}\n\n{body}\n")
     print(f"→ enregistré dans {out_file}")
