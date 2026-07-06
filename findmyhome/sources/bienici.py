@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import re
+import time
 import unicodedata
 
 import requests
@@ -131,4 +132,5 @@ def fetch(filters: dict, global_cfg: dict) -> list[Listing]:
         if len(ads) < size:
             break
         page += 1
+        time.sleep(1.0)  # courtesy throttle between pages to avoid abuse/ban
     return out[:max_total]
