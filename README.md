@@ -6,7 +6,9 @@ Veille locative automatisée sur Bordeaux. Collecte les annonces de Bien'ici, le
 
 ## Tu veux juste recevoir les annonces ?
 
-La façon la plus simple : envoie-moi tes critères (budget, surface, quartiers, ce que tu cherches) et ton email — je m'occupe du reste. Tu recevras ton rapport chaque semaine sans rien installer.
+La façon la plus simple : remplis ce formulaire → [tally.so/r/9q5lpp](https://tally.so/r/9q5lpp)
+
+Indique ton email, ton budget, ta surface, tes critères éliminatoires et ce qui compte pour toi — je m'occupe du reste. Tu recevras ton rapport chaque semaine sans rien installer.
 
 ---
 
