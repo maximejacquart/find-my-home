@@ -1,0 +1,25 @@
+display_name: Your Name
+email: you@example.com
+
+sources:
+  - bienici
+
+filters:
+  max_price: 900          # charges comprises
+  min_surface: 30
+  min_rooms: 2            # T2 ou T3
+  property_types: [appartement]
+  cities: [Bordeaux]
+
+preferences: |
+  Décris ce que tu cherches en texte libre. Ce bloc est envoyé au scoring IA.
+
+  ÉLIMINATOIRE :
+  - Critères qui disqualifient une annonce d'office.
+
+  IMPORTANT (fait fortement monter ou baisser le score) :
+  - Critères qui pèsent lourd dans le score sans être bloquants.
+
+profile: |
+  Décris ton dossier locataire : revenus, garants, situation.
+  Utilisé pour évaluer la faisabilité de la candidature.

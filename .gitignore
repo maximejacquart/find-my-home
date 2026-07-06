@@ -4,3 +4,8 @@ __pycache__/
 .venv/
 out/
 .firecrawl/
+
+# Local config (personal). Keep the *.example.yaml templates tracked.
+config/config.yaml
+config/users/*.yaml
+!config/users/example.yaml

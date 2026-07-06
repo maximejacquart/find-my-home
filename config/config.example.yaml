@@ -1,0 +1,4 @@
+# Global config. Copy to config.yaml and tune. Secrets live in .env.
+
+top_n: 10                      # max listings per weekly report
+max_listings_per_source: 100   # crawl cap per source
